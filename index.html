@@ -82,6 +82,10 @@
       .hide {
         display: none;
       }
+
+      * {
+        font-family: Arial, Helvetica, sans-serif;
+      }
     </style>
   </head>
   <body>
@@ -92,6 +96,7 @@
       <div id="verde" class="color verde right" data-color="verde"></div>
       <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
     
     const celeste = document.getElementById("celeste");
@@ -115,10 +120,21 @@
 
         this.siguienteNivel = this.siguienteNivel.bind(this)
         this.elegirColor = this.elegirColor.bind(this);
-        btnEmpezar.classList.add("hide");
+        this.toggleBtnEmpezar();
         this.nivel = 1;
         this.colores = { celeste, violeta, naranja, verde }
 
+      }
+
+      toggleBtnEmpezar() {
+
+        if(btnEmpezar.classList.contains("hide")) {
+          btnEmpezar.classList.remove("hide");
+        }
+        else {
+          btnEmpezar.classList.add("hide");
+        }
+        
       }
 
       generarSecuencia() {
@@ -199,7 +215,7 @@
             this.eliminarEventosClick();
 
             if(this.nivel === (ULTIMO_NIVEL + 1)) {
-              // Ganó
+              this.ganoElJuego();
             }
             else {
               setTimeout(this.siguienteNivel, 1500);
@@ -209,8 +225,31 @@
 
         }
         else {
-          // Perdió
+          this.perdioElJuego();
         }
+
+      }
+
+      async ganoElJuego() {
+
+        await Swal.fire({
+          text: "¡Felicitaciones!, ganaste el juego",
+          icon: "success"
+        });
+
+        this.inicializar();
+
+      }
+
+      async perdioElJuego() {
+
+        await Swal.fire({
+          text: "¡Felicitaciones!, perdiste el juego",
+          icon: "error"
+        });
+
+        this.eliminarEventosClick();
+        this.inicializar();
 
       }
 
